@@ -1,5 +1,5 @@
 const getEl = (el)=>document.querySelector(el);
-const getAll = (el)=>document.querySelector(el);
+const getAll = (el)=>document.querySelectorAll(el);
 
 let popUp = (e)=>{
     e.preventDefault();//block main event
@@ -11,6 +11,16 @@ let popUp = (e)=>{
     getEl('.pizzaBig img').src = pizzaJson[key].img;
     getEl('.pizzaInfo h1').innerHTML = pizzaJson[key].name;
     getEl('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
+    getEl('.pizzaInfo--actualPrice').innerHTML = 'R$ '+pizzaJson[key].price.toFixed(2);
+    getEl('.pizzaInfo--size.selected').classList.remove('selected');
+    getAll('.pizzaInfo--size').forEach((size, sizeIndex)=>{
+
+        if(sizeIndex == 2){
+            size.classList.add('selected');
+        }
+
+        size.querySelector('span').innerHTML = pizzaJson[key].sizes[sizeIndex];
+    });
 
     //open modal
     getEl('.pizzaWindowArea').style.opacity = 0;
@@ -19,12 +29,16 @@ let popUp = (e)=>{
         getEl('.pizzaWindowArea').style.opacity = 1;
     },200);
 
+    //close modal
+    getAll('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item)=>{
+        item.addEventListener('click',closeModal);
+    });
 }
 
 pizzaJson.map((item, index)=>{
     //select the model and clone this
     let pizzaItem = getEl('.models .pizza-item').cloneNode(true);
-
+ 
     //add item
     pizzaItem.setAttribute('data-key', index);
     pizzaItem.querySelector('.pizza-item--name').innerHTML = item.name;
@@ -39,5 +53,13 @@ pizzaJson.map((item, index)=>{
 
 });
 
+ //modal event
+let closeModal = ()=>{
+    getEl('.pizzaWindowArea').style.opacity = 0;
 
-//pizza aula 6
+    setTimeout(()=>{
+        getEl('.pizzaWindowArea').style.display = 'none';
+    },500);
+}
+
+//pizza aula 7
