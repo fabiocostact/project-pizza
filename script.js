@@ -6,6 +6,7 @@ let popUp = (e)=>{
 
     //get the element and get attibute
     let key = e.target.closest('.pizza-item').getAttribute('data-key');
+    let modalQt = 1;
 
     //show pizza data
     getEl('.pizzaBig img').src = pizzaJson[key].img;
@@ -13,14 +14,39 @@ let popUp = (e)=>{
     getEl('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
     getEl('.pizzaInfo--actualPrice').innerHTML = 'R$ '+pizzaJson[key].price.toFixed(2);
     getEl('.pizzaInfo--size.selected').classList.remove('selected');
-    getAll('.pizzaInfo--size').forEach((size, sizeIndex)=>{
 
+    //get all pizza size
+    getAll('.pizzaInfo--size').forEach((size, sizeIndex)=>{
         if(sizeIndex == 2){
             size.classList.add('selected');
         }
-
+        
         size.querySelector('span').innerHTML = pizzaJson[key].sizes[sizeIndex];
+
+        size.addEventListener('click', ()=>{
+            getEl('.pizzaInfo--size.selected').classList.remove('selected');
+            size.classList.add('selected');
+        });
     });
+
+    getEl('.pizzaInfo--qt').innerHTML = modalQt;
+
+    //add +1
+    getEl('.pizzaInfo--qtmenos').addEventListener('click',()=>{
+        if(modalQt > 1){
+            modalQt--;
+            getEl('.pizzaInfo--qt').innerHTML = modalQt;
+        }
+    });
+
+    //minus 1
+    getEl('.pizzaInfo--qtmais').addEventListener('click',()=>{
+        modalQt++;
+        getEl('.pizzaInfo--qt').innerHTML = modalQt;
+    });
+
+    
+
 
     //open modal
     getEl('.pizzaWindowArea').style.opacity = 0;
@@ -62,4 +88,4 @@ let closeModal = ()=>{
     },500);
 }
 
-//pizza aula 7
+//pizza aula 9
