@@ -1,18 +1,20 @@
 const getEl = (el)=>document.querySelector(el);
 const getAll = (el)=>document.querySelectorAll(el);
+let cart = [];
+let ModalKey,modalQt;
 
 let popUp = (e)=>{
     e.preventDefault();//block main event
 
     //get the element and get attibute
-    let key = e.target.closest('.pizza-item').getAttribute('data-key');
-    let modalQt = 1;
-
+    ModalKey= e.target.closest('.pizza-item').getAttribute('data-key');
+    modalQt = 1;
+    
     //show pizza data
-    getEl('.pizzaBig img').src = pizzaJson[key].img;
-    getEl('.pizzaInfo h1').innerHTML = pizzaJson[key].name;
-    getEl('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
-    getEl('.pizzaInfo--actualPrice').innerHTML = 'R$ '+pizzaJson[key].price.toFixed(2);
+    getEl('.pizzaBig img').src = pizzaJson[ModalKey].img;
+    getEl('.pizzaInfo h1').innerHTML = pizzaJson[ModalKey].name;
+    getEl('.pizzaInfo--desc').innerHTML = pizzaJson[ModalKey].description;
+    getEl('.pizzaInfo--actualPrice').innerHTML = 'R$ '+pizzaJson[ModalKey].price.toFixed(2);
     getEl('.pizzaInfo--size.selected').classList.remove('selected');
 
     //get all pizza size
@@ -21,7 +23,7 @@ let popUp = (e)=>{
             size.classList.add('selected');
         }
         
-        size.querySelector('span').innerHTML = pizzaJson[key].sizes[sizeIndex];
+        size.querySelector('span').innerHTML = pizzaJson[ModalKey].sizes[sizeIndex];
 
         size.addEventListener('click', ()=>{
             getEl('.pizzaInfo--size.selected').classList.remove('selected');
@@ -46,8 +48,6 @@ let popUp = (e)=>{
     });
 
     
-
-
     //open modal
     getEl('.pizzaWindowArea').style.opacity = 0;
     getEl('.pizzaWindowArea').style.display = 'flex';
@@ -59,7 +59,19 @@ let popUp = (e)=>{
     getAll('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item)=>{
         item.addEventListener('click',closeModal);
     });
+    
 }
+
+getEl('.pizzaInfo--addButton').addEventListener('click', ()=>{
+    //add to pay
+    cart.push({
+        id: pizzaJson[ModalKey].id,
+        size: parseInt(getEl('.pizzaInfo--size.selected').getAttribute('data-Key')),
+        qtd: modalQt
+    });
+    console.log(cart);
+    closeModal();
+});
 
 pizzaJson.map((item, index)=>{
     //select the model and clone this
