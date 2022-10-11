@@ -1,7 +1,7 @@
 const getEl = (el)=>document.querySelector(el);
 const getAll = (el)=>document.querySelectorAll(el);
 let cart = [];
-let ModalKey,modalQt;
+let ModalKey, modalQt;
 
 let popUp = (e)=>{
     e.preventDefault();//block main event
@@ -30,24 +30,10 @@ let popUp = (e)=>{
             size.classList.add('selected');
         });
     });
-
+    
     getEl('.pizzaInfo--qt').innerHTML = modalQt;
 
-    //add +1
-    getEl('.pizzaInfo--qtmenos').addEventListener('click',()=>{
-        if(modalQt > 1){
-            modalQt--;
-            getEl('.pizzaInfo--qt').innerHTML = modalQt;
-        }
-    });
-
-    //minus 1
-    getEl('.pizzaInfo--qtmais').addEventListener('click',()=>{
-        modalQt++;
-        getEl('.pizzaInfo--qt').innerHTML = modalQt;
-    });
-
-    
+        
     //open modal
     getEl('.pizzaWindowArea').style.opacity = 0;
     getEl('.pizzaWindowArea').style.display = 'flex';
@@ -62,14 +48,38 @@ let popUp = (e)=>{
     
 }
 
+//minus +1
+getEl('.pizzaInfo--qtmenos').addEventListener('click',()=>{
+    if(modalQt > 1){
+        modalQt--;
+        getEl('.pizzaInfo--qt').innerHTML = modalQt;
+    }
+});
+
+//add 1
+getEl('.pizzaInfo--qtmais').addEventListener('click',()=>{
+    console.log(modalQt);
+    modalQt++;
+    getEl('.pizzaInfo--qt').innerHTML = modalQt;
+});
+
 getEl('.pizzaInfo--addButton').addEventListener('click', ()=>{
-    //add to pay
-    cart.push({
-        id: pizzaJson[ModalKey].id,
-        size: parseInt(getEl('.pizzaInfo--size.selected').getAttribute('data-Key')),
-        qtd: modalQt
-    });
-    console.log(cart);
+    let pizzaSize = parseInt(getEl('.pizzaInfo--size.selected').getAttribute('data-Key'));
+    let pizzaId = pizzaJson[ModalKey].id;
+    let pizzaIdentifier =  pizzaId+'@'+pizzaSize;
+
+    if(cart.find(item => item.identifier == pizzaIdentifier)){
+        //update cart
+        cart[ModalKey].qtd += modalQt;
+    }else{
+        //add to pay
+        cart.push({
+            identifier: pizzaIdentifier,
+            id: pizzaId,
+            size: pizzaSize,
+            qtd: modalQt
+        });
+    }
     closeModal();
 });
 
@@ -100,4 +110,4 @@ let closeModal = ()=>{
     },500);
 }
 
-//pizza aula 10
+//pizza aula 11
