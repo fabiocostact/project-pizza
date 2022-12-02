@@ -58,7 +58,6 @@ getEl('.pizzaInfo--qtmenos').addEventListener('click',()=>{
 
 //add 1
 getEl('.pizzaInfo--qtmais').addEventListener('click',()=>{
-    console.log(modalQt);
     modalQt++;
     getEl('.pizzaInfo--qt').innerHTML = modalQt;
 });
@@ -68,7 +67,7 @@ getEl('.pizzaInfo--addButton').addEventListener('click', ()=>{
     let pizzaId = pizzaJson[ModalKey].id;
     let pizzaIdentifier =  pizzaId+'@'+pizzaSize;
 
-    if(cart.find(item => item.identifier == pizzaIdentifier)){
+    if(cart.find(item => item.identifier == pizzaIdentifier) > -1){
         //update cart
         cart[ModalKey].qtd += modalQt;
     }else{
@@ -80,6 +79,9 @@ getEl('.pizzaInfo--addButton').addEventListener('click', ()=>{
             qtd: modalQt
         });
     }
+
+    updateCart();
+
     closeModal();
 });
 
@@ -108,6 +110,41 @@ let closeModal = ()=>{
     setTimeout(()=>{
         getEl('.pizzaWindowArea').style.display = 'none';
     },500);
+}
+
+let updateCart = ()=>{
+    if(cart.length > 0){
+        getEl('aside').classList.add('show');
+
+        getEl('.cart').innerHTML = '';
+        
+        for(let i in cart){
+            let pizzaItem = pizzaJson.find((item)=>item.id == cart[i].id);
+            let cartItem = getEl('.models .cart--item').cloneNode(true);
+
+            let pizzaSizeName;
+            switch(cart[i].size){
+                case 0:
+                    pizzaSizeName = 'P';
+                    break;
+                case 1:
+                    pizzaSizeName = 'M';
+                    break;
+                case 2:
+                    pizzaSizeName = 'G';
+                    break;
+            }
+            
+            cartItem.querySelector('img').src = pizzaItem.img;
+            cartItem.querySelector('.cart--item-nome').innerHTML = pizzaItem.name+' ('+pizzaSizeName+')';
+            cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qtd;
+
+            getEl('.cart').append(cartItem);
+        }
+
+    }else{
+        getEl('aside').classList.add('remove');
+    }
 }
 
 //pizza aula 11
