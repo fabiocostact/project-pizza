@@ -51,6 +51,9 @@ aside {
 aside.show {
     width:30vw;
 }
+aside.remove {
+    width:0vw;
+}
 .cart--area {
     padding:20px;
 }

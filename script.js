@@ -66,10 +66,11 @@ getEl('.pizzaInfo--addButton').addEventListener('click', ()=>{
     let pizzaSize = parseInt(getEl('.pizzaInfo--size.selected').getAttribute('data-Key'));
     let pizzaId = pizzaJson[ModalKey].id;
     let pizzaIdentifier =  pizzaId+'@'+pizzaSize;
-
-    if(cart.find(item => item.identifier == pizzaIdentifier) > -1){
+    let key = cart.findIndex((item)=> item.identifier == pizzaIdentifier);
+   
+    if(key > -1){
         //update cart
-        cart[ModalKey].qtd += modalQt;
+        cart[key].qtd += modalQt;
     }else{
         //add to pay
         cart.push({
@@ -114,6 +115,7 @@ let closeModal = ()=>{
 
 let updateCart = ()=>{
     if(cart.length > 0){
+        getEl('aside').classList.remove('remove');
         getEl('aside').classList.add('show');
 
         getEl('.cart').innerHTML = '';
@@ -138,11 +140,25 @@ let updateCart = ()=>{
             cartItem.querySelector('img').src = pizzaItem.img;
             cartItem.querySelector('.cart--item-nome').innerHTML = pizzaItem.name+' ('+pizzaSizeName+')';
             cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qtd;
+            cartItem.querySelector('.cart--item-qtmenos').addEventListener('click',()=>{
+                if(cart[i].qtd > 1){
+                    cart[i].qtd--;
+                }else{
+                    cart.splice(i,1);
+                } 
+                updateCart();
+            });
+
+            cartItem.querySelector('.cart--item-qtmais').addEventListener('click',()=>{
+                cart[i].qtd++;
+                updateCart();
+            });
 
             getEl('.cart').append(cartItem);
         }
 
     }else{
+        console.log('aqui');
         getEl('aside').classList.add('remove');
     }
 }
