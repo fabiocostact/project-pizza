@@ -113,12 +113,26 @@ let closeModal = ()=>{
     },500);
 }
 
+getEl('.menu-openner').addEventListener('click', ()=>{
+    if(cart.length > 0){
+        getEl('aside').style.left = 0;
+    }
+})
+
+getEl('.menu-closer').addEventListener('click', ()=>{
+    getEl('aside').style.left = '100vw';
+})
+
 let updateCart = ()=>{
+
+    getEl('.menu-openner span').innerHTML = cart.length;
+
     if(cart.length > 0){
         getEl('aside').classList.remove('remove');
         getEl('aside').classList.add('show');
 
         getEl('.cart').innerHTML = '';
+        let subTotal = 0;
         
         for(let i in cart){
             let pizzaItem = pizzaJson.find((item)=>item.id == cart[i].id);
@@ -154,13 +168,23 @@ let updateCart = ()=>{
                 updateCart();
             });
 
+            subTotal += pizzaItem.price*cart[i].qtd;
+
             getEl('.cart').append(cartItem);
         }
 
+
+        getEl('.subtotal span:last-child').innerHTML = 'R$ '+subTotal.toFixed(2);
+        let desconto = (subTotal*0.10);
+        getEl('.desconto span:last-child').innerHTML = 'R$ '+desconto.toFixed(2);
+        getEl('.total span:last-child').innerHTML = 'R$ '+(subTotal-desconto).toFixed(2);
+
+
     }else{
-        console.log('aqui');
         getEl('aside').classList.add('remove');
+        getEl('aside').style.left = '100vw';
     }
+
 }
 
 //pizza aula 11
